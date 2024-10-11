@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+  workflow_dispatch:  # Allows manual triggering of the workflow
+    inputs:
+      deploy-dev:
+        description: 'Check this to build the Docker image and deploy the app'
+        required: true
+        default: false
+        type: boolean
+env:
+  DOCKER_USERNAME: aashraf756
+  DOCKER_REPO: service-email-passgenius
+  DEPLOYMENT_NAME: email
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.22'
+
+      - name: Install dependencies
+        working-directory: ./cmd/service
+        run: go mod tidy
+
+      - name: Build the Go application
+        run: go build -o myapp ./cmd/service
+
+      - name: Set Image Tag
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        run: |
+          hash_short="${GITHUB_SHA:0:8}"
+          echo "hash_short=$hash_short" >> "$GITHUB_ENV"
+          echo "IMAGE_TAG=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:$hash_short" >> "$GITHUB_ENV"
+
+
+      - name: Build Docker Image
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        run: |
+          # Build the Docker image
+          docker build . -t $IMAGE_TAG
+
+      - name: Push Docker Image
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        run: |
+          # Log in to Docker Hub
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin
+          # Push the Docker image
+          docker push $IMAGE_TAG
+
+      - name: Update Deployment Manifest
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        uses: anas-ash99/passgenius-github-actions@main
+        with:
+          image_tag: ${{ env.IMAGE_TAG }}
+          deployment_name: ${{ env.DEPLOYMENT_NAME }}
+          github_token: ${{ secrets.TOKEN_GITHUB }}
+
