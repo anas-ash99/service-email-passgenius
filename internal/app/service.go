@@ -18,6 +18,7 @@ func (s *EmailService) sendEmail(email *models.Email) error {
 	smtpPort := "587"
 	username := "anas.ash099@gmail.com"
 	password := os.Getenv("PASSGENIUS-GMAIL-APP-PASSWORD")
+	fmt.Println(password)
 
 	to := []string{email.To}
 	subject := "Subject: " + email.Subject + "\n"
