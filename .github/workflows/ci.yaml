@@ -31,17 +31,15 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Print current directory
-        run: pwd
-
-      - name: List files in current directory
-        run: ls -la
       - name: Install dependencies
-        working-directory: ./cmd/service  # set the working directory
+        working-directory: ./cmd/service
         run: go mod tidy
 
+      - name: Build the Go application
+        run: go build -o myapp ./cmd/service
+
       - name: Set Image Tag
-#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           hash_short="${GITHUB_SHA:0:8}"
           echo "hash_short=$hash_short" >> "$GITHUB_ENV"
@@ -49,13 +47,13 @@ jobs:
 
 
       - name: Build Docker Image
-#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Build the Docker image
           docker build . -t $IMAGE_TAG
 
       - name: Push Docker Image
-#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Log in to Docker Hub
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
