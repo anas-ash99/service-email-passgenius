@@ -33,37 +33,40 @@ jobs:
 
       - name: Print current directory
         run: pwd
-      - name: Install dependencies
-        working-directory: ./cmd/service  # set the working directory
-        run: go mod tidy
 
-      - name: Set Image Tag
+      - name: List files in current directory
+        run: ls -la
+#      - name: Install dependencies
+#        working-directory: ./cmd/service  # set the working directory
+#        run: go mod tidy
+#
+#      - name: Set Image Tag
+##        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        run: |
+#          hash_short="${GITHUB_SHA:0:8}"
+#          echo "hash_short=$hash_short" >> "$GITHUB_ENV"
+#          echo "IMAGE_TAG=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:$hash_short" >> "$GITHUB_ENV"
+#
+#
+#      - name: Build Docker Image
+##        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        run: |
+#          # Build the Docker image
+#          docker build . -t $IMAGE_TAG
+#
+#      - name: Push Docker Image
+##        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        run: |
+#          # Log in to Docker Hub
+#          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+#          # Push the Docker image
+#          docker push $IMAGE_TAG
+#
+#      - name: Update Deployment Manifest
 #        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
-        run: |
-          hash_short="${GITHUB_SHA:0:8}"
-          echo "hash_short=$hash_short" >> "$GITHUB_ENV"
-          echo "IMAGE_TAG=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:$hash_short" >> "$GITHUB_ENV"
-
-
-      - name: Build Docker Image
-#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
-        run: |
-          # Build the Docker image
-          docker build . -t $IMAGE_TAG
-
-      - name: Push Docker Image
-#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
-        run: |
-          # Log in to Docker Hub
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          # Push the Docker image
-          docker push $IMAGE_TAG
-
-      - name: Update Deployment Manifest
-        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
-        uses: anas-ash99/passgenius-github-actions@v1.0.6
-        with:
-          image_tag: ${{ env.IMAGE_TAG }}
-          deployment_name: ${{ env.DEPLOYMENT_NAME }}
-          github_token: ${{ secrets.TOKEN_GITHUB }}
+#        uses: anas-ash99/passgenius-github-actions@v1.0.6
+#        with:
+#          image_tag: ${{ env.IMAGE_TAG }}
+#          deployment_name: ${{ env.DEPLOYMENT_NAME }}
+#          github_token: ${{ secrets.TOKEN_GITHUB }}
 
