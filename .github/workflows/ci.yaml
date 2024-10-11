@@ -31,7 +31,7 @@ jobs:
           go-version: '1.22'
 
       - name: Set Image Tag
-        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           hash_short="${GITHUB_SHA:0:8}"
           echo "hash_short=$hash_short" >> "$GITHUB_ENV"
@@ -39,13 +39,13 @@ jobs:
 
 
       - name: Build Docker Image
-        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Build the Docker image
           docker build . -t $IMAGE_TAG
 
       - name: Push Docker Image
-        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
+#        if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
         run: |
           # Log in to Docker Hub
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
