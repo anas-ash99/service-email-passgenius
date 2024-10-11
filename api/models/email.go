@@ -21,3 +21,8 @@ func NewEmail() *Email {
 		SentAt:  time.Now(),
 	}
 }
+
+type Response struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}
