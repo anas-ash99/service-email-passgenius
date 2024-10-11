@@ -12,10 +12,6 @@
 # Output of the go coverage tool
 *.out
 
-# Go modules
-/go.sum
-/go.mod
-
 # IDE or editor specific files
 .idea/
 *.swp
