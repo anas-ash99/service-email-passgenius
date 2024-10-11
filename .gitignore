@@ -1,0 +1,35 @@
+# Go binaries
+/bin/
+/out/
+/build/
+
+# Vendor directory
+/vendor/
+
+# Go test binary, output
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go modules
+/go.sum
+/go.mod
+
+# IDE or editor specific files
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment variables
+.env
