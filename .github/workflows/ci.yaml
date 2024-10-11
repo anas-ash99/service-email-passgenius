@@ -62,7 +62,7 @@ jobs:
 
       - name: Update Deployment Manifest
         if: github.event.inputs.deploy-dev == 'true' || github.ref_name == 'main'
-        uses: anas-ash99/passgenius-github-actions@v1
+        uses: anas-ash99/passgenius-github-actions@main
         with:
           image_tag: ${{ env.IMAGE_TAG }}
           deployment_name: ${{ env.DEPLOYMENT_NAME }}
